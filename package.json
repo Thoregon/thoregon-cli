@@ -1,0 +1,21 @@
+{
+  "name": "thoregon-cli",
+  "version": "1.0.0",
+  "description": "CLI to build and init Thore͛gons",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thoregon/thoregon-cli.git"
+  },
+  "keywords": [],
+  "author": "Bernhard Lukassen <bl@bernhard-lukassen.com> (http://www.bernhard-lukassen.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Thoregon/thoregon-cli/issues"
+  },
+  "homepage": "https://github.com/Thoregon/thoregon-cli#readme"
+}
