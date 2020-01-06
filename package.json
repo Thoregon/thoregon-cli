@@ -5,6 +5,7 @@
   "type": "module",
   "main": "index.mjs",
   "scripts": {
+    "newscope": "node ./cli/scope.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/Thoregon/thoregon-cli/issues"
   },
-  "homepage": "https://github.com/Thoregon/thoregon-cli#readme"
+  "homepage": "https://github.com/Thoregon/thoregon-cli#readme",
+  "dependencies": {
+    "cuid": "^2.1.8"
+  }
 }
