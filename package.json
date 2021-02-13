@@ -19,9 +19,5 @@
     "url": "https://github.com/Thoregon/thoregon-cli/issues"
   },
   "homepage": "https://github.com/Thoregon/thoregon-cli#readme",
-  "dependencies": {
-    "cuid": "^2.1.8",
-    "gun": "^0.2020.301"
-  }
 }
 

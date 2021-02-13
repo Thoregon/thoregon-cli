@@ -17,10 +17,30 @@ $ thoregon <command> [options] [params]
 ## CLI Base
 After installing the CLI, only a limited set of commands are available.
 
-- install
-- vault
-- signon
-- karte  (limited functions)
+- install ... a thoregon node
+    - local node
+    - local dev node
+    - name it, generate id
+- join ... thoregon node to your galaxy
+- vault ... manage keypairs and certs 
+- signon ... signon with a SSI
+- galors  (limited functions)
+
+Development
+! caution: there is no server and no client code !
+Even if there is a dev server, there is 
+
+- new ... quickly scaffold components
+    - app     ... scaffold component structure with UI
+    - service ... scaffold component structure w/o UI
+- deploy ... builds a package and deploys it into the universe
+    - omits directories 'doc', 'node_modules' and 'tests' 
+    - uses 'thoregon.mjs' as component descriptor, describes all dependencies (repo/component/version)
+    - uses builder hooks if defined (in package.json)
+    - deploys a signed component package -> developer keypair needed!
+- deploy node_modules
+    - from dist
+    - browser/node/es6 version and entry point
  
 To use the whole CLI, a Thoregon (peer) must be installed. This can be done using the 'install' command.
 
@@ -50,9 +70,9 @@ Runs the install process. you will be asked for options
 
 ### vault
 
-### karte
+### galors
 
-Register a galaxy 
+Register an entity
 
 ### components
 
