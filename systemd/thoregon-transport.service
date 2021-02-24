@@ -1,0 +1,17 @@
+[Unit]
+Description=Thoregon Node Transport
+Documentation=https://thoregon.io
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/gunsig/node_modules/gun/examples
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=thoregontransport
+Type=simple
+User=bl
+ExecStart=/home/bl/.nvm/versions/node/v13.5.0/bin/node /opt/gunsig/node_modules/gun/examples/http.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

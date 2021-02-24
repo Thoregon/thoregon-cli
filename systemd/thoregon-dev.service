@@ -1,0 +1,15 @@
+[Unit]
+Description=Thoregon Node
+Documentation=https://thoregon.io
+After=network.target
+
+[Service]
+Environment="NODE=/home/bl/.nvm/versions/node/v13.5.0/bin/node"
+Environment="THOREGON_HOME=/opt/thoregon"
+Type=simple
+User=ubuntu
+ExecStart=$NODE --loader $THOREGON_HOME/evolux.modules/evolux.universe/bootloader.mjs $THOREGON_HOME/Thoregon/thoregon.mjs -s dev
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

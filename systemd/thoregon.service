@@ -1,0 +1,17 @@
+[Unit]
+Description=Thoregon Node
+Documentation=https://thoregon.io
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/thoregon/Thoregon
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=thoregon
+Type=simple
+User=bl
+ExecStart=/home/bl/.nvm/versions/node/v13.5.0/bin/node --loader /opt/thoregon/evolux.modules/evolux.universe/bootloader.mjs /opt/thoregon/Thoregon/thoregon.mjs -s prod
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
