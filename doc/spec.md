@@ -72,9 +72,20 @@ Runs the install process. you will be asked for options
 
 ### galors
 
+Explore, Measure, Profile the universe
+
+### dorifer
+
 Register an entity
 
-### components
+#### components
+
+deploy components as package:
+- LICENCE.md, README.md
+- index*.mjs
+- lib/
+- ui*/
+- wrap with ES6 export
 
 shortcut 'cmp'
 
