@@ -11,9 +11,12 @@ $ pnpm add --global thoregon-cli
 `
 
 Usage:
+thor ... thoregon master control cli
+
 `
-$ thoregon <command> [options] [params]
+$ thor <command> [options] [params]
 `
+
 ## CLI Base
 After installing the CLI, only a limited set of commands are available.
 
