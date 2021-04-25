@@ -8,6 +8,7 @@
 
 import ThoregonPackage from "../lib/archive/thoregonpackage.mjs";
 import commander       from '/commander';
+import ComponentPacker from "../lib/archive/componentpacker.mjs";
 
 const program = new commander.Command();
 program.version('0.0.2');
@@ -66,10 +67,37 @@ program
     .description('create a thoregon package')
     .option("-k, --kind <kind>", "kind of package, one of ['browser', 'node', 'electron']", 'browser')
     .action(async (file, options) => {
-        file = file || 'thoregon.zip';  // 'thoregon.thar'
+        file = file || 'thoregon.zip';
         console.log(`packaging '${options.kind}' to ${file}`);
         let tp = new ThoregonPackage();
         await tp.package(options.kind, file);
+    });
+
+/*
+ *  Create a deployable component package
+ */
+program
+    .command('pack <directory> [packname]')
+    .description('create a component package')
+    .action(async (directory, packname, options) => {
+        let p = new ComponentPacker();
+        // check if dir exists
+        // use last path element as package name
+        console.log(`packaging component '${directory}'`);
+        let packagefile = await p.build(directory, packname);
+        console.log('Package: ', packagefile);
+    });
+
+
+/*
+ *  Create a deployable component package
+ */
+program
+    .command('wrapes6 <file>')
+    .description("wrap a '.js' file with ES6 exports")
+    .action(async (file, options) => {
+        // check
+        console.log(`wrapping '${file}' to ${file}`);
     });
 
 /*

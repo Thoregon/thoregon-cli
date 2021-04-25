@@ -1,6 +1,7 @@
 CLI
 ===
 
+## Install
 `
 $ npm install -g thoregon-cli
 `
@@ -30,20 +31,26 @@ After installing the CLI, only a limited set of commands are available.
 - galors  (limited functions)
 
 Development
-! caution: there is no server and no client code !
-Even if there is a dev server, there is 
+Caution: there is no server and no client code !
+Even if there is a dev server, there is no server in the sense of REST or DB!
 
+- dev ... start the development server
+    - specify entries to the 
 - new ... quickly scaffold components
     - app     ... scaffold component structure with UI
     - service ... scaffold component structure w/o UI
+- pack ... build a deployable component package
+    - packd ... pack and deploy if no error
 - deploy ... builds a package and deploys it into the universe
     - omits directories 'doc', 'node_modules' and 'tests' 
     - uses 'thoregon.mjs' as component descriptor, describes all dependencies (repo/component/version)
     - uses builder hooks if defined (in package.json)
     - deploys a signed component package -> developer keypair needed!
-- deploy node_modules
+- wrapes6 node_modules
     - from dist
     - browser/node/es6 version and entry point
+
+- thoregon ... builds a 'thorgon.zip' package. you may never do this.
  
 To use the whole CLI, a Thoregon (peer) must be installed. This can be done using the 'install' command.
 
@@ -55,21 +62,6 @@ The CLI is a minified Thoregon peer, comprised of a limmited set of components.
 With the CLI you can manage your whole galaxy. 
 
 ## Commands
-
-### install
-Runs the install process. you will be asked for options
-
-- peer: give the peer a name, an id will be generated. 
-    the name will then be registered at the name service. the name must be located in your __galaxy__
-    cli option: -p --peer
-- domain: the domain if you want to publish an API to the web
-    
-
-### start
-
-
-### stop
-
 
 ### vault
 
@@ -91,6 +83,23 @@ deploy components as package:
 - wrap with ES6 export
 
 shortcut 'cmp'
+
+## manage a peer
+
+### install
+Runs the install process. you will be asked for options
+
+- peer: give the peer a name, an id will be generated. 
+    the name will then be registered at the name service. the name must be located in your __galaxy__
+    cli option: -p --peer
+- domain: the domain if you want to publish an API to the web
+    
+
+### start
+
+
+### stop
+
 
 
 ## Extensions
