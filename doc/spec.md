@@ -34,11 +34,17 @@ Development
 Caution: there is no server and no client code !
 Even if there is a dev server, there is no server in the sense of REST or DB!
 
+--> @see https://nx.dev/
+
 - dev ... start the development server
     - specify entries to the 
 - new ... quickly scaffold components
     - app     ... scaffold component structure with UI
     - service ... scaffold component structure w/o UI
+- add 
+    - entity
+    - view
+    - component
 - pack ... build a deployable component package
     - packd ... pack and deploy if no error
 - deploy ... builds a package and deploys it into the universe
