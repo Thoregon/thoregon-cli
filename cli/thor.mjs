@@ -65,12 +65,14 @@ program
 program
     .command('thoregon [file]')
     .description('create a thoregon package')
-    .option("-k, --kind <kind>", "kind of package, one of ['browser', 'node', 'electron']", 'browser')
+    .option("-k, --kind <kind>", "kind of package, one of ['browser', 'node']", 'browser')      // "kind of package, one of ['browser', 'node', 'electron']"
+    .option("-i, --identity <identity>", "identity file containing keypairs", "./thoregonidentity.mjs")
     .action(async (file, options) => {
-        file = file || 'thoregon.zip';
+        const { kind, identity } = options;
+        file = file || (kind === 'browser') ? 'thoregonB.zip' : 'thoregonN.zip';
         console.log(`packaging '${options.kind}' to ${file}`);
-        let tp = new ThoregonPackage();
-        await tp.package(options.kind, file);
+        const tp = new ThoregonPackage();
+        await tp.package(file, { kind, identity });
     });
 
 /*
@@ -79,12 +81,16 @@ program
 program
     .command('pack <directory> [packname]')
     .description('create a component package')
+    .option("-m, --multi", "the specified loaction contains multiple components, package all together in one library")
+    .option("-i, --identity", "identity file containing keypairs")
     .action(async (directory, packname, options) => {
-        let p = new ComponentPacker();
+        const p = new ComponentPacker();
         // check if dir exists
         // use last path element as package name
         console.log(`packaging component '${directory}'`);
-        let packagefile = await p.build(directory, packname);
+        const { multi, identity } = options;
+        let archiveprops = await p.build(directory, packname, { multi, identity } );
+        console.log("Archive Properties", JSON.stringify(archiveprops, null, 4));
         console.log('Package: ', packagefile);
     });
 
