@@ -81,17 +81,20 @@ program
 program
     .command('pack <directory> [packname]')
     .description('create a component package')
+    .option("-o, --output <output>", "output filename")
+    .option("-s, --skip <modules...>", "skip names modules")
     .option("-m, --multi", "the specified loaction contains multiple components, package all together in one library")
-    .option("-i, --identity", "identity file containing keypairs")
+    .option("-i, --identity <identity>", "identity file containing keypairs")
+    .option("-t, --test", "include test data")
     .action(async (directory, packname, options) => {
         const p = new ComponentPacker();
         // check if dir exists
         // use last path element as package name
         console.log(`packaging component '${directory}'`);
-        const { multi, identity } = options;
-        let archiveprops = await p.build(directory, packname, { multi, identity } );
+        const { multi, identity, output, skip, test } = options;
+        let archiveprops = await p.build(directory, packname, { multi, identity, output, skip, test } );
         console.log("Archive Properties", JSON.stringify(archiveprops, null, 4));
-        console.log('Package: ', packagefile);
+        // console.log('Package: ', archiveprops.archive);
     });
 
 
