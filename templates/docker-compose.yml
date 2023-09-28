@@ -1,0 +1,17 @@
+version: '3'
+networks:
+  neuland:
+services:
+  thoregon:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: ${CONTAINER_NAME}
+    restart: unless-stopped
+    env_file: .env_container
+    volumes:
+      - /home/${USER}/containers/${CONTAINER_NAME}/${CONTAINER_NAME}_data:/thoregon/data
+    networks:
+      - neuland
+    ports:
+      - ${CONTAINER_PORT}:7777

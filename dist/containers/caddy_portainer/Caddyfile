@@ -1,0 +1,15 @@
+{
+    email bl@bernhard-lukassen.com
+}
+
+portainer.thoregon.io {
+    reverse_proxy portainer:9000
+}
+
+portainer.bernhard-lukassen.com {
+    reverse_proxy portainer:9000
+}
+
+collector.thoregon.io {
+    reverse_proxy stripecollector:7778
+}

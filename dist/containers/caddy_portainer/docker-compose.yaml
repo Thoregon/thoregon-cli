@@ -1,0 +1,40 @@
+version: '3.3'
+networks:
+  neuland:
+    attachable: true
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    command: --http-enabled
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /home/lucky/containers/portainer/portainer-data:/data
+    networks:
+      - neuland
+    ports:
+      - 9010:9000
+      - 8000:8000
+
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    container_name: caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /home/lucky/containers/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /home/lucky/containers/caddy/site:/srv
+      - /home/lucky/containers/caddy/caddy_data:/data
+      - /home/lucky/containers/caddy/caddy_config:/config
+    networks:
+      - neuland
+volumes:
+  caddy_data:
+    external: true
+  caddy_config:

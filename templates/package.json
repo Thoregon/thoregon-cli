@@ -1,0 +1,14 @@
+{
+  "name": "",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+  },
+  "keywords": [],
+  "dependencies": {
+    // "greenlock-express": "^4.0.3",
+    "dotenv": "^16.3.1",
+    "yargs": "^15.3.1"
+  }
+}
