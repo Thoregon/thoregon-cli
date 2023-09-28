@@ -2,6 +2,9 @@ version: '3.3'
 networks:
   neuland:
     attachable: true
+  resource:
+    external: true
+    name: resourceserver_resource
 services:
   portainer:
     image: portainer/portainer-ce:latest
@@ -34,6 +37,7 @@ services:
       - /home/lucky/containers/caddy/caddy_config:/config
     networks:
       - neuland
+      - resource
 volumes:
   caddy_data:
     external: true

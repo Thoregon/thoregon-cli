@@ -13,3 +13,7 @@ portainer.bernhard-lukassen.com {
 collector.thoregon.io {
     reverse_proxy stripecollector:7778
 }
+
+resource.thoregon.io {
+     reverse_proxy resourceserver:7779
+}
