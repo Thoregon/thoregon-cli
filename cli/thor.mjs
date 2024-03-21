@@ -6,11 +6,12 @@
  * @see: {@link https://github.com/Thoregon}
  */
 
-import ThoregonPackage  from "../lib/archive/thoregonpackage.mjs";
-import commander        from '/commander';
-import ComponentPacker  from "../lib/archive/componentpacker.mjs";
-import ContainerBuilder from "../lib/container/containerbuilder.mjs";
-import dotenv           from "dotenv";
+import ThoregonPackage   from "../lib/archive/thoregonpackage.mjs";
+import commander         from '/commander';
+import ComponentPacker   from "../lib/archive/componentpacker.mjs";
+import ContainerBuilder  from "../lib/container/containerbuilder.mjs";
+import ContainerDeployer from "../lib/deploy/containerdeployer.mjs";
+import dotenv            from "dotenv";
 dotenv.config();
 
 // @see: https://github.com/tj/commander.js
@@ -101,9 +102,29 @@ program
         console.log(`packaging component '${directory}'`);
         const { multi, identity, output, skip, ui, assets, path, test } = options;
         let archiveprops = await p.build(directory, packname, { multi, identity, output, ui, assets, skip, path, test } );
-        console.log("Archive Properties", JSON.stringify(archiveprops, null, 4));
-        // console.log('Package: ', archiveprops.archive);
+        // console.log("Archive Properties", JSON.stringify(archiveprops, null, 4));
+        console.log('Package: ', archiveprops.archive);
     });
+
+/*
+ * merge component packages
+ */
+
+/*
+program
+    .command('merge <packname> <packages...>')
+    .description("create a merged component package with <packages...>. will be generated at 'dist/packages/<packname>'")
+    .action(async (packname, packages) => {
+        if (packname.indexOf('/') > -1) return console.log("It seems there is no package name specified, would be:", packname, `\nAdd the package name right after 'merge'> thor merge <packname> ${[packname, ...packages].join(', ')}`);
+
+        console.log("Packages: ", packages?.join(', '));
+        console.log("Packname: ", packname);
+
+        const p = new ComponentPacker();
+        let archiveprops = await p.merge(packname, packages);
+        console.log("Archive Properties", JSON.stringify(archiveprops, null, 4));
+    })
+*/
 
 /*
  * Build a service agent container
@@ -114,20 +135,24 @@ program
     .command('agent <containername>')
     .description("build a service agent container. will be generated at 'dist/containers/<containername>'")
     .requiredOption("-i, --identity <identity>", "identity file containing keypairs")
-    .option("-n, --neuland <neulqnd>", "location of the neuland DB (relative to './dist/packages')")
+    .option("-a, --appagent <appagent>", "location of the app agent name")
+    .option("-n, --neuland <neuland>", "location of the neuland DB (relative to './dist/packages')")
     .option("-c, --components <components...>", "location of the component archives (relative to './dist/packages', see 'pack <component>')")
     .option("-t, --thoregon <thoregonpackage>", "location of the thoregon package (relative to './dist/thoregon')", 'thoregonN.zip')
+    .option("-p, --peers <peers...>", "list id ids from known peers")
+    .option("-pm, --peermodule <peermodule>", "module to import returning known peers")
     .action(async (containername, options) => {
         // check
-        const { thoregon, identity, components, neuland } = options;
+        const { thoregon, identity, components, neuland, appagent } = options;
         console.log(`agent '${containername}'`);
+        if (appagent) console.log(`-a '${appagent}'`);
         console.log(`-n '${neuland}'`);
-        console.log(`-i '${identity}'`);
-        console.log(`-t '${thoregon}'`);
-        console.log(`-c '${components}'`);
+        if (neuland) console.log(`-i '${identity}'`);
+        if (thoregon) console.log(`-t '${thoregon}'`);
+        if (components) console.log(`-c '${components}'`);
 
         const containerBuilder = new ContainerBuilder();
-        const containerInfo = await containerBuilder.create({ containername , identity, thoregon, components, neuland });
+        const containerInfo = await containerBuilder.create({ containername , identity, thoregon, components, neuland, appagent });
         console.log("Container:\n" , JSON.stringify(containerInfo, null, 4));
     });
 
@@ -152,6 +177,86 @@ program
         console.log("Container:\n" , JSON.stringify(containerInfo, null, 4));
     });
 
+// todo: create agentmod (no only add components)
+
+/*
+ * build a container for an app UI
+ * - supports create/login SSI
+ * - supports connect devices
+ * - general entry point, supports all (known) apps
+ *   - local repo for available apps
+ * - opens specified app
+ */
+program
+    .command('app <containername>')
+    .description("modify a service agent and build a new container")
+    .option("-a, --app <app>", "app which will be started if no app is specified")
+    .option("-i, --identity <identity>", "identity file containing keypairs, only for DEV and TESTING")
+    .option("-c, --components <components...>", "location of the component archives (relative to './dist/packages', see 'pack <component>')")
+    .option("-t, --thoregon <thoregonpackage>", "location of the thoregon package (relative to './dist/thoregon')", 'thoregonB.zip')
+    .option("--dev", "build a dev container")
+    .action(async (containername, options) => {
+        // check
+        const { app, identity, thoregon, components, peers, peersmodule } = options;
+        console.log(`app '${containername}'`);
+        console.log(`-a '${app}'`);
+        console.log(`-i '${identity}'`);
+        console.log(`-c '${components}'`);
+
+        const containerBuilder = new ContainerBuilder();
+        const containerInfo = await containerBuilder.createUI({ thoregon, containername, app, components });
+        console.log("Container:\n" , JSON.stringify(containerInfo, null, 4));
+    });
+
+/**
+ * deploy settings for a container
+ * run container with settings
+ *
+ */
+program
+    .command('deploy <containername> [deployname]')
+    .description("deploy a container with <containername>. Either a full path or a name relative to './dist/container'.\nif no deployname the config name will be used.\nthe deployname is relative to './deploy'")
+    .requiredOption("-c, --config <configname>", "use config (relative to './dist/thoregon')")
+    .option("-d, --domain <domain>", "domain for this container")
+    .option("-i, --identity <identity>", "identity file containing keypairs, only for DEV and TESTING")
+    .option("-n, --neulanddb <neulanddb>", "path to neuland DB to deploy")
+    .action(async (containername, deployname, options) => {
+        const { identity, configname, neulanddb, domain } = options;
+        console.log(`-d '${domain}'`);
+        console.log(`-c '${configname}'`);
+        if (!deployname) deployname = configname;
+        if (identity)  console.log(`-i '${identity}'`);
+        if (neulanddb) console.log(`-n '${neulanddb}'`);
+        console.log(`Deployname; ${deployname}`);
+
+        const deployer   = new ContainerDeployer();
+        const deployInfo = await deployer.deployContainer({ containername, deployname, configname, neulanddb, identity, domain });
+        console.log("Deploy:\n", JSON.stringify(deployInfo, null, 4));
+
+    })
+/**
+ * deploy settings for a container
+ * run container with settings
+ *
+ */
+program
+    .command('deployui <containername> [deployname]')
+    .description("deploy an app UI with <containername>. Either a full path or a name relative to './dist/www'.\nif no deployname the config name will be used.\nthe deployname is relative to './deploy'")
+    .requiredOption("-d, --domain <domain>", "domain for this container")
+    .requiredOption("-c, --config <configname>", "use config (relative to './dist/thoregon')")
+    .requiredOption("-x, --custid <custid>", "id for the customer")
+    .action(async (containername, deployname, options) => {
+        const { domain, configname, custid } = options;
+        if (!deployname) deployname = configname;
+        console.log(`-d '${domain}'`);
+        console.log(`-s '${configname}'`);
+        console.log(`-x '${custid}'`);
+        console.log(`Deployname; ${deployname}`);
+
+        const deployer   = new ContainerDeployer();
+        const deployInfo = await deployer.deployUIContainer({ containername, deployname, configname, domain, custid });
+        console.log("Deploy UI:\n", JSON.stringify(deployInfo, null, 4));
+    })
 /*
  *  Create a deployable component package
  */

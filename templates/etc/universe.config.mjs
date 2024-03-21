@@ -20,7 +20,14 @@ import npath    from "/path";
 
 export const path = npath;
 
-export const NEULAND_STORAGE_OPT = { location: 'data', name: 'neuland' };    // can override: writeCount, writeInterval
+import pfs from 'fs/promises';
+export const fs = pfs;
+
+import * as pspecials from "/evolux.util/lib/specialnode.mjs";
+export const specials = pspecials;
+
+export const NEULAND_STORAGE_OPT      = { location: 'data', name: 'neuland' };    // can override: writeCount, writeInterval
+export const NEULANDLOCAL_STORAGE_OPT = { location: 'data', name: 'neulandlocal' };    // can override: writeCount, writeInterval
 
 //
 // define agent
@@ -62,6 +69,8 @@ export const GET_SECRET_WORKER = async () => {
     return (await import('/thoregon.identity/sasecretworker.mjs')).default;
 }
 
+export const PEERSIGNALING = "peer.thoregon.io";
+
 //
 // HTTP interface, access only via reverse proxy
 //
@@ -77,41 +86,11 @@ export const WWW = {
 }
 
 //
-// HTTPS support (uncomment if required)
-//
-/*const greenlock = {
-    // where to find .greenlockrc and set default paths
-    packageRoot: process.cwd(),
-
-    // where config and certificate stuff go
-    configDir: "./greenlock.d",
-
-    // contact for security and critical bug notices
-    maintainerEmail: "<name>@<domain>",
-
-    // name & version for ACME client user agent
-    //packageAgent: pkg.name + "/" + pkg.version,
-
-    // whether or not to run at cloudscale
-    cluster: false
-};
-
-export const WWW = {
-    // root: 'www/',        --> default
-    // common: './',        --> default
-    // index: 'index.mjs',  --> default
-    // port: 80,            --> will serve on 443 for secure communication and on 80 for redirects; cannot be changes, its for production
-    greenlock: greenlock,
-        cachecontrol: 'public, max-age=18000'     // fresh in seconds = 5 hours
-}*/
-
-
-//
 // initialize unviverse wide services an functions
 //
 
 universe.atDawn(async (universe) => {
-    await import('./thoregonsystem.mjs');
+    await import('../thoregonsystem.mjs');
 
     universe.lifecycle.triggerPrepare();
     universe.lifecycle.triggerStart();

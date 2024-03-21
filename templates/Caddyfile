@@ -1,0 +1,4 @@
+# caddy directives to map REST/WWW to container
+${domain} {
+    reverse_proxy ${agentname}:${port}
+}

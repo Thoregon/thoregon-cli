@@ -19,7 +19,6 @@ import IdentityReflection    from '/thoregon.identity/lib/identityreflection.mjs
 import Dorifer               from '/thoregon.truCloud/lib/dorifer.mjs';
 import WebserviceController  from '/evolux.web//lib/webservicecontroller.mjs';
 import LogSink               from "/evolux.universe/lib/sovereign/logsink.mjs";
-import { PEERID }            from "./universe.config.mjs";
 
 //
 // crypto, safety & security
@@ -41,7 +40,7 @@ universe.$netconfig = {
         knownPeers: universe.KNOWN_PEERS,
         relay    : false,
         signaling: {
-            host  : "185.11.139.203",
+            host  : "peer.thoregon.io",
             port  : 9000,
             secure: false,
             // path: "/myapp",
@@ -64,27 +63,29 @@ universe.$mq        = MQ.setup();
 // components
 //
 
-const neuland    = new NeulandDB();
-// const gunservice = new GunService();
-const identity   = new IdentityReflection();
-const dorifer    = new Dorifer();
-const wsc        = new WebserviceController();
+const neuland      = new NeulandDB();
+const neulandlocal = new NeulandDB();
+const identity     = new IdentityReflection();
+const dorifer      = new Dorifer();
+const wsc          = new WebserviceController();
 
 neuland.init(NeulandStorageAdapter, universe.NEULAND_STORAGE_OPT);
 await neuland.start();
-// await gunservice.start();
+neulandlocal.init(NeulandStorageAdapter, universe.NEULANDLOCAL_STORAGE_OPT);
+await neulandlocal.start();
+
 await identity.start();
 await dorifer.start();
 await wsc.start();
 // if (universe.DEV?.ssi) {
 //     const SSI = universe.DEV?.ssi;
-//     const spec = (await import("./agent_0.config.mjs")).default;
+//     const spec = (await import("./etc/agent_0.config.mjs")).default;
 //     await universe.Identity.useIdentity(SSI);
 //     await universe.Agent.addServiceSpec(spec);
 // }
 
 const SSI = universe.IDENTITY;
-const spec = (await import("./agent_0.config.mjs")).default;
+const spec = (await import("./etc/agent_0.config.mjs")).default;
 await universe.Identity.useIdentity(SSI);
 await universe.Agent.addServiceSpec(spec);
 
@@ -114,6 +115,7 @@ await agent.prepare();
 
 universe.atDusk(async (universe, code) => {
     universe.neuland?.stop();
+    universe.neulandlocal?.stop();
 })
 
 // don't need a double lifecycle handling
@@ -129,7 +131,7 @@ universe.atDusk(async (universe, code) => {
 //     await wsc.start();
 //     if (universe.DEV?.ssi) {
 //         const SSI = universe.DEV?.ssi;
-//         const spec = (await import("./agent_0.config.mjs")).default;
+//         const spec = (await import("./etc/agent_0.config.mjs")).default;
 //         await universe.Identity.useIdentity(SSI);
 //         await universe.Agent.addServiceSpec(spec);
 //     }

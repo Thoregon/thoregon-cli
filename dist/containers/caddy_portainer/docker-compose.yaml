@@ -35,6 +35,7 @@ services:
       - /home/lucky/containers/caddy/site:/srv
       - /home/lucky/containers/caddy/caddy_data:/data
       - /home/lucky/containers/caddy/caddy_config:/config
+      - /home/lucky/www:/www
     networks:
       - neuland
       - resource

@@ -2,6 +2,10 @@
     email bl@bernhard-lukassen.com
 }
 
+peer.thoregon.io {
+    reverse_proxy peer-signaling:9000
+}
+
 portainer.thoregon.io {
     reverse_proxy portainer:9000
 }
@@ -16,4 +20,19 @@ collector.thoregon.io {
 
 resource.thoregon.io {
      reverse_proxy resourceserver:7779
+}
+
+upayme.thoregon.io {
+    root * /www/upaymeui
+    uri replace /etc/ /.etc/upayme/ # config for domain
+    file_server
+    handle_errors {
+        rewrite * /404-notfound.html
+        file_server
+    }
+}
+
+handle_errors {
+    rewrite * /404-notfound.html
+    file_server
 }

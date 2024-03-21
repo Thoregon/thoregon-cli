@@ -1,0 +1,10 @@
+# caddydirectives to server app UI
+${domain} {
+    root * /www/${app}
+    uri replace /etc/ /.etc/${custetc}/ # config for domain
+    file_server
+    handle_errors {
+        rewrite * /404-notfound.html
+        file_server
+    }
+}

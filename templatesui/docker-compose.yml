@@ -10,11 +10,13 @@ services:
     restart: unless-stopped
     env_file: .env_container
     volumes:
+      # map static (file) resources, includes location for uploaded images
+      - /home/${USER}/containers/${CONTAINER_NAME}/${CONTAINER_NAME}/www:/thoregon/www
       # map DB folder
       - /home/${USER}/containers/${CONTAINER_NAME}/${CONTAINER_NAME}/data:/thoregon/data
       # map cache folder
       - /home/${USER}/containers/${CONTAINER_NAME}/${CONTAINER_NAME}/.thoregon:/thoregon/.thoregon
-      # map config
+      # map config files
       - /home/${USER}/containers/${CONTAINER_NAME}/${CONTAINER_NAME}/etc:/thoregon/etc
     networks:
       - neuland
