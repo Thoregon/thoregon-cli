@@ -32,6 +32,8 @@ upayme.thoregon.io {
     }
 }
 
+neitzwerk.upay.me {}
+
 handle_errors {
     rewrite * /404-notfound.html
     file_server
