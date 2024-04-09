@@ -10,7 +10,7 @@ import PeerJSNetworkAdapter from "./relay/peerjsnetworkadapter.mjs";
 import PolicyRelay          from "./relay/policyrelay.mjs";
 import Peer                 from "../ext/peerjs/peerjs.min.mjs";
 
-import { default as KNOWN_PEERS }        from '../knownpeers.mjs';
+import { default as KNOWN_PEERS }        from '../etc/knownpeers.mjs';
 
 //export const KNOWN_PEERS = ['PeerJS-ynGhbGJjEh3BCNH1mSBTykj89a7PXNzO'];
 
