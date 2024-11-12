@@ -1,0 +1,26 @@
+# Thoregon/Neuland
+https://github.com/Thoregon/thoregon-cli
+
+https://github.com/Thoregon/Client.git
+https://github.com/Thoregon/Agent.git
+https://github.com/Thoregon/evolux.util.git
+https://github.com/Thoregon/evolux.universe.git
+https://github.com/Thoregon/evolux.pubsub.git
+https://github.com/Thoregon/evolux.everblack.git
+https://github.com/Thoregon/evolux.dyncomponents.git
+https://github.com/Thoregon/evolux.supervise.git
+https://github.com/Thoregon/evolux.web.git
+https://github.com/Thoregon/thoregon.aurora.git
+https://github.com/Thoregon/thoregon.ux.git
+https://github.com/Thoregon/thoregon.identity.git
+https://github.com/Thoregon/thoregon.neuland.git
+https://github.com/Thoregon/thoregon.tru4D.git
+https://github.com/Thoregon/thoregon.truCloud.git
+https://github.com/Thoregon/thoregon.crystalline.git
+https://github.com/Thoregon/thoregon.telom.git
+https://github.com/Thoregon/thoregon.archetim.git
+# https://github.com/Thoregon/terra.stripe.git          !! not in a git currently
+
+# project
+ssh://git@git.bernhard-lukassen.com/home/git/thatsme.git
+

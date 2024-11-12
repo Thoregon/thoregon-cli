@@ -1,0 +1,49 @@
+easypay-application-dashboard           thatsme/thoregon/easypay/applications
+upayme-application-customer             thatsme/thoregon/easypay/applications
+easypay-application-checkout            thatsme/thoregon/easypay/applications
+upayme-application-conversiontools      thatsme/thoregon/easypay/applications
+upayme-application-accountportal        thatsme/thoregon/easypay/applications
+upayme-application-nexus                thatsme/thoregon/easypay/applications
+
+upayme-style-nexus                      thatsme/thoregon/easypay/styles
+upayme-style-customer                   thatsme/thoregon/easypay/styles
+
+easypay-home                            thatsme/thoregon/easypay/home
+nexus-home                              thatsme/thoregon/easypay/home
+
+easypay-module-ipn                      thatsme/thoregon/easypay/modules
+easypay-module-document
+easypay-module-storesettings
+easypay-module-credential
+easypay-module-order
+easypay-module-customer-validator
+easypay-checkout-session
+easypay-module-payment
+easypay-module-taxes
+easypay-module-pdf
+easypay-module-product
+easypay-module-pricing
+easypay-module-credential-delete
+easypay-module-events
+easypay-module-paymentplan
+easypay-module-email
+easypay-module-coupon
+easypay-module-checkoutpage-helper
+upayme-module-accountportal
+upayme-module-nexusapi
+upayme-module-digistore24
+upayme-module-invoice
+upayme-module-transaction
+upayme-application-affiliate
+upayme-module-affiliate-action-manager
+upayme-module-contentlinks
+upayme-module-businesscase
+upayme-module-paymentmethods
+upayme-module-customer
+
+paymentprocessors
+
+upayme-module-identitycard
+upayme-module-nexusemail
+
+upayme-service-portal

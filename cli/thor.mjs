@@ -12,7 +12,19 @@ import ComponentPacker   from "../lib/archive/componentpacker.mjs";
 import ContainerBuilder  from "../lib/container/containerbuilder.mjs";
 import ContainerDeployer from "../lib/deploy/containerdeployer.mjs";
 import dotenv            from "dotenv";
+import UnArchiver        from "../lib/archive/unarchiver.mjs";
+import DNSManager        from "/evolux.web/lib/dns/dnsmanager.mjs";
+import NamecheapDNS      from "/evolux.web/lib/dns/namecheap/namecheapdns.mjs";
+
 dotenv.config();
+
+//
+// DNS
+//
+
+const DNS = {
+    namecheap: { apiKey: 'c154b631ac6945a591e36458a004d6b1', apiUser: 'MartinKirchner', clientIp: process.env.CLIENTID ?? '81.217.87.214' }
+}
 
 // @see: https://github.com/tj/commander.js
 const program = new commander.Command();
@@ -74,7 +86,7 @@ program
     .option("-i, --identity <identity>", "identity file containing keypairs", "./thoregonidentity.mjs")
     .action(async (file, options) => {
         const { kind, identity } = options;
-        file = file || (kind === 'browser') ? 'thoregonB.zip' : 'thoregonN.zip';
+        file = file || (kind === 'browser') ? 'thoregonB' : 'thoregonN';
         console.log(`packaging '${options.kind}' to ${file}`);
         const tp = new ThoregonPackage();
         await tp.package(file, { kind, identity });
@@ -105,6 +117,56 @@ program
         // console.log("Archive Properties", JSON.stringify(archiveprops, null, 4));
         console.log('Package: ', archiveprops.archive);
     });
+
+
+program
+    .command('unpack <packname>')
+    .description("unpack a component package.")
+    .option("-o, --output <outputdir>", "output dirname")
+    .action(async (packname, options) => {
+        const unpack = new UnArchiver();
+        // check if dir exists
+        // use last path element as package name
+        console.log(`unpackaging '${packname}'`);
+        const { output } = options;
+        await unpack.unpackArchive(packname, output);
+        console.log('Unpack: ', packname);
+    });
+
+/*
+ * DNS
+ */
+
+const dns = program.command('dns');
+
+dns
+    .command('list <domain> [type]')
+    .option("-p, --provider <providername>", "DNS provider name", 'namecheap')
+    .action(async (domain, type, options) => {
+        const { provider } = options;
+        // console.log("DNS list", provider, domain, type);
+        const dnsmgr = DNSManager.use(provider, DNS[provider]);
+        const records = await dnsmgr.listRecords(domain, type);
+        console.log('DNS list', domain, '\n', records.map(rec => JSON.stringify(rec)).join('\n'));
+    })
+
+dns
+    .command('add <name> <recordType> <data>')
+    .option("-p, --provider <providername>", "DNS provider name", 'namecheap')
+    .action(async (name, recordType, data, options) => {
+        try {
+            const { provider } = options;
+            const hostName     = name.split('.')[0];
+            const domain       = name.split('.')[1] + '.' + name.split('.')[2];
+            // console.log("DNS add", provider, name, recordType, data);
+            const dnsmgr = DNSManager.use(provider, DNS[provider]);
+            const success = await dnsmgr.addRecord(domain, { recordType, hostName, data });
+            console.log(`DNS '${provider}' add '${name}' ${recordType} ${data} ${success ? 'successful' : 'failed'}`);
+        } catch (e) {
+            console.error("DNS add:", e);
+        }
+    })
+
 
 /*
  * merge component packages
@@ -138,21 +200,23 @@ program
     .option("-a, --appagent <appagent>", "location of the app agent name")
     .option("-n, --neuland <neuland>", "location of the neuland DB (relative to './dist/packages')")
     .option("-c, --components <components...>", "location of the component archives (relative to './dist/packages', see 'pack <component>')")
+    .option("-d, --dependencies <dependencies>", "location of the dependencies file")
     .option("-t, --thoregon <thoregonpackage>", "location of the thoregon package (relative to './dist/thoregon')", 'thoregonN.zip')
     .option("-p, --peers <peers...>", "list id ids from known peers")
     .option("-pm, --peermodule <peermodule>", "module to import returning known peers")
     .action(async (containername, options) => {
         // check
-        const { thoregon, identity, components, neuland, appagent } = options;
+        const { thoregon, identity, components, neuland, appagent, dependencies } = options;
         console.log(`agent '${containername}'`);
         if (appagent) console.log(`-a '${appagent}'`);
         console.log(`-n '${neuland}'`);
         if (neuland) console.log(`-i '${identity}'`);
         if (thoregon) console.log(`-t '${thoregon}'`);
         if (components) console.log(`-c '${components}'`);
+        if (dependencies) console.log(`-d '${dependencies}'`);
 
         const containerBuilder = new ContainerBuilder();
-        const containerInfo = await containerBuilder.create({ containername , identity, thoregon, components, neuland, appagent });
+        const containerInfo = await containerBuilder.create({ containername, dependencies , identity, thoregon, components, neuland, appagent });
         console.log("Container:\n" , JSON.stringify(containerInfo, null, 4));
     });
 
@@ -189,7 +253,7 @@ program
  */
 program
     .command('app <containername>')
-    .description("modify a service agent and build a new container")
+    .description("build a container for an app UI")
     .option("-a, --app <app>", "app which will be started if no app is specified")
     .option("-i, --identity <identity>", "identity file containing keypairs, only for DEV and TESTING")
     .option("-c, --components <components...>", "location of the component archives (relative to './dist/packages', see 'pack <component>')")

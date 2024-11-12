@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+#
+# deploy Thoregon
+#
+
+UILOCATION="/Users/bernhardlukassen/Documents/dev/Projects/ThoregonUniverse/Puls.Dev.Anon/dist"
+
+THORLOCATION="/Users/bernhardlukassen/Documents/dev/Projects/ThoregonUniverse/thoregon-cli/dist/thoregon"
+
+THORPACKS=("thoregonB.neuarch.gz")
+
+# shellcheck disable=SC2068
+for pack in ${THORPACKS[@]}; do
+  # shellcheck disable=SC2225
+  cp "$THORLOCATION/$pack" "$UILOCATION/$pack"
+done
+
+#
+# deploy UI
+#
+
+PACKLOCATION="/Users/bernhardlukassen/Documents/dev/Projects/ThoregonUniverse/thoregon-cli/dist/packages"
+
+UIPACKS=("upayme-style-nexus.neuarch.gz" "upaymemodules.neuarch.gz" "upayme-ui-accountportal.neuarch.gz" "upaymenexusapi.neuarch.gz" "upayme-ui-affiliate.neuarch.gz" "upaymenexushome.neuarch.gz" "upayme-ui-checkout.neuarch.gz" "upaymenexusmodules.neuarch.gz" "upayme-ui-conversiontools.neuarch.gz" "upayme-ui-customer.neuarch.gz" "upayme-ui-dashboard.neuarch.gz" "upayme-ui-nexus.neuarch.gz" "upayme-style-customer.neuarch.gz" "upaymehome.neuarch.gz")
+
+# shellcheck disable=SC2068
+for pack in ${UIPACKS[@]}; do
+  # shellcheck disable=SC2225
+  cp "$PACKLOCATION/$pack" "$UILOCATION/$pack"
+done

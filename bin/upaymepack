@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+#
+# thoregon packages
+#
+
+thor thoregon -k node
+thor thoregon -k browser
+
+#
+# build all upay.me packages
+#
+
+UPAYMEROOT="/Users/bernhardlukassen/Documents/dev/Projects/b-coop/thatsme/thoregon/easypay"
+UPAYMEAPPS="$UPAYMEROOT/applications"
+TERRAROOT="/Users/bernhardlukassen/Documents/dev/Projects/ThoregonUniverse/terra.modules"
+
+#
+# all nexus base packages
+#
+
+thor pack -m -i ./testidentity.mjs "$UPAYMEROOT/nexusmodules" upaymenexusmodules
+thor pack -m -i ./testidentity.mjs "$UPAYMEROOT/nexusservices" upaymenexusservices
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/home/nexus-home" upaymenexushome
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/modules/upayme-module-nexusapi" upaymenexusapi
+
+#
+# all app base packages
+#
+
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/home/easypay-home" upaymehome
+thor pack -m -i ./testidentity.mjs "$UPAYMEROOT/modules" upaymemodules
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/services/easypay-service" upaymeservices
+
+#
+# payment processors
+#
+
+thor pack -i ./testidentity.mjs -p /paymentprocessors/stripe "$UPAYMEROOT/services/paymentprocessors/stripe" upaymestripe
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/services/paymentprocessors" upaymepaymentprocessors
+thor pack -i ./testidentity.mjs "$TERRAROOT/terra.stripe" terrastripe
+#
+# app packages for agents
+#
+
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/easypay-application-dashboard" upayme-application-dashboard
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/easypay-application-checkout" upayme-application-checkout
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/upayme-application-accountportal" upayme-application-accountportal
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/upayme-application-affiliate" upayme-application-affiliate
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/upayme-application-conversiontools" upayme-application-conversiontools
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/upayme-application-customer" upayme-application-customer
+thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/upayme-application-nexus" upayme-application-nexus
+# thor pack -i ./testidentity.mjs --no-ui --no-assets "$UPAYMEAPPS/upayme-application-shop" upayme-application-shop
+
+#
+# app packages for UI
+#
+
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/easypay-application-dashboard" upayme-ui-dashboard
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/easypay-application-checkout" upayme-ui-checkout
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/upayme-application-accountportal" upayme-ui-accountportal
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/upayme-application-affiliate" upayme-ui-affiliate
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/upayme-application-conversiontools" upayme-ui-conversiontools
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/upayme-application-customer" upayme-ui-customer
+thor pack -i ./testidentity.mjs "$UPAYMEAPPS/upayme-application-nexus" upayme-ui-nexus
+
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/styles/upayme-style-nexus" upayme-style-nexus
+thor pack -i ./testidentity.mjs "$UPAYMEROOT/styles/upayme-style-customer" upayme-style-customer
+
+
+#
+# now copy packages
+#
+
+
